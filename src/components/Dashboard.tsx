@@ -30,7 +30,7 @@ export default function Dashboard() {
     useEffect(() => {
         async function loadRuns() {
             try {
-                const data = await fetchWorkflowRuns("DewaldFourie", "StickerSmash");
+                const data = await fetchWorkflowRuns("DewaldFourie", "CI-CD-Dashboard-DevOps-Monitor-");
                 console.log("WorkflowRuns fetched:", data); 
                 setWorkflowRuns(data);
             } catch (err) {
