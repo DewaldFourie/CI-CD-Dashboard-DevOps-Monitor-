@@ -25,6 +25,14 @@ jobs:
       - name: 🛠️ Build project
         run: npm run build
 
-      - name: ✅ Run tests (optional)
+      - name: ✅ Run tests
         run: npm test
         continue-on-error: true
+
+      - name: 📄 Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: reports/test-summary.json
+
