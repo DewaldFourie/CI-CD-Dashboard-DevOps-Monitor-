@@ -10,9 +10,13 @@ jobs:
       - name: 🔄 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📤 Try uploading a dummy file
+      - name: 📝 Create dummy test summary
+        run: |
+          mkdir -p reports
+          echo '{"summary": "This is a dummy test summary"}' > reports/test-summary.json
+
+      - name: 📤 Upload dummy artifact
         uses: actions/upload-artifact@v4
         with:
           name: dummy-artifact
           path: reports/test-summary.json
-
