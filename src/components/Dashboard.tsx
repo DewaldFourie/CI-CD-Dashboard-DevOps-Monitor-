@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Sidebar from './Sidebar';
 import Header from './Header';
 import { fetchWorkflowRuns } from "../services/GitHubService";
+import TestSummaryWidget  from "../components/TestSummaryWidget";
 
 interface Workflowrun {
     id: number;
@@ -58,7 +59,7 @@ export default function Dashboard() {
                 <Header />
                 <main className="p-6 bg-gray-100 flex-1 overflow-y-auto">
                     <h2 className="text-xl font-semibold mb-4 text-gray-700">Latest Workflow Runs</h2>
-                    <div className="grid grid-cols-3 gap-4 mb-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                         <div className="bg-white p-4 rounded shadow text-center">
                             <p className="text-gray-500 text-sm">Total Runs</p>
                             <p className="text-xl font-bold">{workflowRuns.length}</p>
@@ -75,7 +76,32 @@ export default function Dashboard() {
                                 {workflowRuns.filter(run => run.conclusion === "failure").length}
                             </p>
                         </div>
+                        <div className="bg-yellow-100 p-4 rounded shadow text-center">
+                            <p className="text-gray-500 text-sm">In Progress</p>
+                            <p className="text-xl font-bold">
+                                {workflowRuns.filter(run => run.status === "in_progress").length}
+                            </p>
+                        </div>
+                        <div className="bg-blue-100 p-4 rounded shadow text-center">
+                            <p className="text-gray-500 text-sm">Success Rate</p>
+                            <p className="text-xl font-bold">
+                                {workflowRuns.length > 0
+                                    ? `${(
+                                        (workflowRuns.filter(run => run.conclusion === "success").length /
+                                            workflowRuns.length) *
+                                        100
+                                    ).toFixed(1)}%`
+                                    : "N/A"}
+                            </p>
+                        </div>
                     </div>
+                    {workflowRuns.length > 0 && (
+                        <TestSummaryWidget
+                            owner="DewaldFourie"
+                            repo="CI-CD-Dashboard-DevOps-Monitor-"
+                            runId={workflowRuns[0].id} // latest run
+                        />
+                    )}
                     <div className="mb-4">
                         <label htmlFor="status-filter" className="text-sm font-medium text-gray-700 mr-2">Filter by status:</label>
                         <select
