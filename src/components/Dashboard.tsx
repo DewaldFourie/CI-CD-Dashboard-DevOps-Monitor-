@@ -70,7 +70,18 @@ export default function Dashboard() {
             <div className="flex-1 flex flex-col">
                 <Header />
                 <main className="p-6 bg-gray-100 flex-1 overflow-y-auto">
-                    <h2 className="text-xl font-semibold mb-4 text-gray-700">Latest Workflow Runs</h2>
+                <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-semibold text-gray-700">Latest Workflow Runs</h2>
+                        <button
+                            onClick={() => {
+                                setLoading(true);
+                                loadRuns();
+                            }}
+                            className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition"
+                        >
+                            ↻ Refresh
+                        </button>
+                    </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                         <div className="bg-white p-4 rounded shadow text-center">
                             <p className="text-gray-500 text-sm">Total Runs</p>
