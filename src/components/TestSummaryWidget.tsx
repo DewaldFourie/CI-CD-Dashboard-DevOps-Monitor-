@@ -86,14 +86,43 @@ export default function TestSummaryWidget({ owner, repo, runId }: Props) {
         return <div className="text-red-500 font-medium text-center text-sm">{error}</div>;
     }
 
-    return (
-        <div className="bg-white border border-blue-200 rounded-2xl shadow-sm p-4 text-center max-w-sm mx-auto">
-            <h3 className="text-ml text-gray-600 mb-2 font-semibold">Test Summary</h3>
-            <div className="text-lg font-semibold space-x-5">
-                <span className="text-green-600">✅ {summary?.numPassedTestSuites ?? 0}</span>
-                <span className="text-red-500">❌ {summary?.numFailedTestSuites ?? 0}</span>
-                <span className="text-yellow-500">⚠️ {summary?.numPendingTestSuites ?? 0}</span>
+    const totalTests =
+        (summary?.numPassedTestSuites ?? 0) +
+        (summary?.numFailedTestSuites ?? 0) +
+        (summary?.numPendingTestSuites ?? 0);
+
+return (
+    <div>
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">Test Summary</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+            <div className="bg-white p-4 rounded shadow text-center">
+                <p className="text-gray-500 text-sm">Total Tests</p>
+                <p className="text-xl font-bold">{totalTests}</p>
+            </div>
+            <div className="bg-green-100 p-4 rounded shadow text-center">
+                <p className="text-gray-500 text-sm">Successes</p>
+                <p className="text-xl font-bold">{summary?.numPassedTestSuites ?? 0}</p>
+            </div>
+            <div className="bg-red-100 p-4 rounded shadow text-center">
+                <p className="text-gray-500 text-sm">Failures</p>
+                <p className="text-xl font-bold">{summary?.numFailedTestSuites ?? 0}</p>
+            </div>
+            <div className="bg-yellow-100 p-4 rounded shadow text-center">
+                <p className="text-gray-500 text-sm">Pending</p>
+                <p className="text-xl font-bold">{summary?.numPendingTestSuites ?? 0}</p>
+            </div>
+            <div className="bg-blue-100 p-4 rounded shadow text-center">
+                <p className="text-gray-500 text-sm">Success Rate</p>
+                <p className="text-xl font-bold">
+                    {totalTests > 0
+                        ? `${((summary?.numPassedTestSuites ?? 0) / totalTests * 100).toFixed(1)}%`
+                        : "N/A"}
+                </p>
             </div>
         </div>
-    );
+    </div>
+);
+
+
+    
 }

@@ -5,11 +5,11 @@ import { fetchWorkflowRuns } from "../services/GitHubService";
 import TestSummaryWidget  from "../components/TestSummaryWidget";
 
 interface Workflowrun {
-    head_branch: string;
     id: number;
     name: string;
     status: string;
-    conclusion: string;
+    conclusion: string | null;
+    head_branch: string;
     html_url: string;
     created_at: string;
     path: string;

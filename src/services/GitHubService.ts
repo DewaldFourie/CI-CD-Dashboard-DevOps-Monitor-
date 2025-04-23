@@ -1,25 +1,71 @@
+
 const BASE_URL = "https://api.github.com";
 
-export async function fetchWorkflowRuns(owner: string, repo: string) {
+interface WorkflowRun {
+    id: number;
+    name: string;
+    status: string;
+    conclusion: string | null;
+    head_branch: string; // Add this property
+    html_url: string; // Add this property
+    created_at: string; // Add this property
+    path: string; // Add this property
+    actor: {
+        login: string;
+        avatar_url: string;
+        html_url: string;
+    };
+    run_started_at: string;
+    updated_at: string;
+}
+
+
+interface WorkflowRunsResponse {
+    workflow_runs: WorkflowRun[];
+    // Add pagination info if necessary
+}
+
+
+export async function fetchWorkflowRuns(owner: string, repo: string): Promise<WorkflowRun[]> {
     const headers: Record<string, string> = {
         Accept: 'application/vnd.github+json',
     };
 
     const token = import.meta.env.VITE_GITHUB_TOKEN;
     if (token) {
-        headers.Authorization = `Bearer ${token}`
+        headers.Authorization = `Bearer ${token}`;
     }
 
-    const res = await fetch(`${BASE_URL}/repos/${owner}/${repo}/actions/runs`, {headers,})
+    let allRuns: WorkflowRun[] = [];
+    let page = 1;  // Starting page number
+    let hasNextPage = true;  // Flag to determine if there are more pages
 
-    if (!res.ok) {
-        throw new Error(`Github API error: ${res.status}`);
+    while (hasNextPage) {
+        const res = await fetch(`${BASE_URL}/repos/${owner}/${repo}/actions/runs?per_page=100&page=${page}`, { headers });
+
+        if (!res.ok) {
+            throw new Error(`Github API error: ${res.status}`);
+        }
+
+        const data: WorkflowRunsResponse = await res.json();
+        console.log(`GitHub workflow data (page ${page}):`, data);
+
+        // Concatenate the new batch of workflow runs to the allRuns array
+        allRuns = allRuns.concat(data.workflow_runs);
+
+        // Check if there is a "next" page in the Link header
+        const linkHeader = res.headers.get('Link');
+        if (linkHeader && linkHeader.includes('rel="next"')) {
+            page++;  // Go to the next page
+        } else {
+            hasNextPage = false;  // No more pages
+        }
     }
 
-    const data = await res.json();
-    console.log("GitHub workflow data:", data);
-    return data.workflow_runs;
+    return allRuns;
 }
+
+
 
 
 export async function fetchArtifacts(owner: string, repo: string, runId: number) {
