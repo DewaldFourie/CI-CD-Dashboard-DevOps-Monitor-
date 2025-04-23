@@ -62,9 +62,14 @@ export default function TestSummaryWidget({ owner, repo, runId }: Props) {
                 console.log("json test summary:", json);
 
                 setSummary(json);
-            } catch (err: any) {
-                console.error("Error loading test summary:", err);
-                setError(err.message || "Failed to load test summary.");
+            } catch (err: unknown) {
+                if (err instanceof Error) {
+                    console.error("Error loading test summary:", err);
+                    setError(err.message || "Failed to load test summary.");
+                } else {
+                    console.error("An unknown error occurred:", err);
+                    setError("Failed to load test summary.");
+                }
             } finally {
                 setLoading(false);
             }
