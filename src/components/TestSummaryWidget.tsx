@@ -17,19 +17,18 @@ interface Props {
 export default function TestSummaryWidget({ owner, repo, runId }: Props) {
     const [summary, setSummary] = useState<TestSummary | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         async function loadSummary() {
             try {
-                setLoading(true);
                 const artifacts = await fetchArtifacts(owner, repo, runId);
-                const testArtifact = artifacts.find((a: {name: string}) =>
-                    /test|results/i.test(a.name)
+                const testArtifact = artifacts.find((a: { name: string }) =>
+                    a.name.toLowerCase().includes("test") || a.name.toLowerCase().includes("results")
                 );
-
+                
                 if (!testArtifact) {
-                    throw new Error("No test summary found.");
+                    setError("No test summary found.");
+                    return;
                 }
 
                 const res = await fetch(testArtifact.archive_download_url, {
@@ -40,45 +39,29 @@ export default function TestSummaryWidget({ owner, repo, runId }: Props) {
                 });
 
                 const blob = await res.blob();
-                const zip = await JSZip.loadAsync(blob);
-                const jsonFile = zip.file(/.*\.json/)?.[0];
-
-                if (!jsonFile) {
-                    throw new Error("No JSON file found in test artifact.");
-                }
-
-                const content = await jsonFile.async("string");
+                const zip = await JSZip.loadAsync(blob); // You'll need `jszip` library
+                const file = zip.file(/.*\.json/)[0];
+                const content = await file.async("string");
                 const json = JSON.parse(content);
                 console.log("json test summary:", json);
-
+        
                 setSummary(json);
-            } catch (err: any) {
-                console.error("Error loading test summary:", err);
-                setError(err.message || "Failed to load test summary.");
-            } finally {
-                setLoading(false);
+            } catch (err) {
+                console.error(err);
+                setError("Failed to load test summary.");
             }
         }
 
         loadSummary();
     }, [owner, repo, runId]);
 
-    if (loading) {
-        return <div className="text-gray-500 text-center text-sm animate-pulse">Loading test summary...</div>;
-    }
-
-    if (error) {
-        return <div className="text-red-500 font-medium text-center text-sm">{error}</div>;
-    }
+    if (error) return <div className="text-red-500 text-sm">{error}</div>;
+    if (!summary) return <div>Loading test summary...</div>;
 
     return (
-        <div className="bg-white border border-blue-200 rounded-2xl shadow-sm p-4 text-center max-w-sm mx-auto">
-            <h3 className="text-ml text-gray-600 mb-2 font-semibold">Test Summary</h3>
-            <div className="text-lg font-semibold space-x-5">
-                <span className="text-green-600">✅ {summary?.numPassedTestSuites ?? 0}</span>
-                <span className="text-red-500">❌ {summary?.numFailedTestSuites ?? 0}</span>
-                <span className="text-yellow-500">⚠️ {summary?.numPendingTestSuites ?? 0}</span>
-            </div>
+        <div className="bg-blue-100 p-4 rounded shadow text-center">
+            <p className="text-gray-500 text-sm">Test Results</p>
+            <p className="text-xl font-bold">✅ {summary.numPassedTestSuites} | ❌ {summary.numFailedTestSuites} | ⚠️ {summary.numPendingTestSuites}</p>
         </div>
     );
 }
