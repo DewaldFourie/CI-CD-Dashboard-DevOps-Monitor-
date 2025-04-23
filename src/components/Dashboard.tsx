@@ -119,7 +119,7 @@ export default function Dashboard() {
                             </p>
                         </div>
                     </div>
-                    <div className="min-h-[95px] mb-6">
+                    <div className="min-h-[125px] mb-6">
                         {workflowRuns.length > 0 ? (
                             <TestSummaryWidget
                                 owner="DewaldFourie"

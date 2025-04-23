@@ -79,7 +79,7 @@ export default function TestSummaryWidget({ owner, repo, runId }: Props) {
     }, [owner, repo, runId]);
 
     if (loading) {
-        return <div className="text-gray-500 text-center text-sm animate-pulse">Loading test summary...</div>;
+        return <div className="text-gray-500 text-sm animate-pulse">Loading test summary...</div>;
     }
 
     if (error) {
