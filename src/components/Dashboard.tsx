@@ -5,6 +5,7 @@ import { fetchWorkflowRuns } from "../services/GitHubService";
 import TestSummaryWidget  from "../components/TestSummaryWidget";
 
 interface Workflowrun {
+    head_branch: string;
     id: number;
     name: string;
     status: string;
@@ -77,7 +78,7 @@ export default function Dashboard() {
                                 setLoading(true);
                                 loadRuns();
                             }}
-                            className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition"
+                            className="px-3 py-1 bg-white text-blue-600 text-sm rounded hover:bg-blue-600 hover:text-white transition"
                         >
                             ↻ Refresh
                         </button>
@@ -187,6 +188,9 @@ export default function Dashboard() {
                                         >
                                             {run.actor.login}
                                         </a>
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                        Branch: <span className="font-medium text-gray-700">{run.head_branch}</span>
                                     </p>
                                     <p className="text-sm text-gray-500">
                                         Duration:{" "}
