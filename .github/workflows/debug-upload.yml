@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 📤 Try uploading a dummy file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dummy-artifact
           path: README.md
