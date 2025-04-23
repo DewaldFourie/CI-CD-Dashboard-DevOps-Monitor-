@@ -49,6 +49,8 @@ export default function TestSummaryWidget({ owner, repo, runId }: Props) {
 
                 const blob = await res.blob();
                 const zip = await JSZip.loadAsync(blob);
+                const files = Object.keys(zip.files);
+                console.log("Files in zip:", files);
                 const jsonFile = zip.file(/.*\.json/)?.[0];
 
                 if (!jsonFile) {

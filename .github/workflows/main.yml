@@ -28,14 +28,13 @@ jobs:
       - name: 🗂️ Create reports directory
         run: mkdir -p reports
 
-      - name: ✅ Run tests
-        run: npm test
-        continue-on-error: true
+      - name: ✅ Run tests and generate test summary
+        run: |
+          npx jest --json --outputFile=reports/test-summary.json
 
-      - name: 📄 Upload test results
+      - name: 📄 Upload test results as an artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: test-summary
           path: reports/test-summary.json
-
