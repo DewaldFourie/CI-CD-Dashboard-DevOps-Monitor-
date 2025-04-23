@@ -25,6 +25,9 @@ jobs:
       - name: 🛠️ Build project
         run: npm run build
 
+      - name: 🗂️ Create reports directory
+        run: mkdir -p reports
+
       - name: ✅ Run tests
         run: npm test
         continue-on-error: true
