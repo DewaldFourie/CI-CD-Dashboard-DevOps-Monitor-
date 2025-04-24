@@ -80,51 +80,54 @@ export default function TestSummaryWidget({ owner, repo, runId }: Props) {
         loadSummary();
     }, [owner, repo, runId]);
 
-    if (loading) {
-        return <div className="text-gray-500 text-sm animate-pulse">Loading test summary...</div>;
-    }
 
-    if (error) {
-        return <div className="text-red-500 font-medium text-center text-sm">{error}</div>;
-    }
 
     const totalTests =
         (summary?.numPassedTestSuites ?? 0) +
         (summary?.numFailedTestSuites ?? 0) +
         (summary?.numPendingTestSuites ?? 0);
 
-return (
-    <div>
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">Test Summary</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-            <div className="bg-white p-4 rounded shadow text-center">
-                <p className="text-gray-500 text-sm">Total Tests</p>
-                <p className="text-xl font-bold">{totalTests}</p>
+        return (
+            <div>
+                {loading ? (
+                    <div className="text-gray-500 text-sm animate-pulse text-center mb-6">
+                        Loading test summary...
+                    </div>
+                ) : error ? (
+                    <div className="text-red-500 font-medium text-center text-sm mb-6">
+                        {error}
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+                        <div className="bg-white p-4 rounded shadow text-center">
+                            <p className="text-gray-500 text-sm">Total Tests</p>
+                            <p className="text-xl font-bold">{totalTests}</p>
+                        </div>
+                        <div className="bg-green-100 p-4 rounded shadow text-center">
+                            <p className="text-gray-500 text-sm">Successes</p>
+                            <p className="text-xl font-bold">{summary?.numPassedTestSuites ?? 0}</p>
+                        </div>
+                        <div className="bg-red-100 p-4 rounded shadow text-center">
+                            <p className="text-gray-500 text-sm">Failures</p>
+                            <p className="text-xl font-bold">{summary?.numFailedTestSuites ?? 0}</p>
+                        </div>
+                        <div className="bg-yellow-100 p-4 rounded shadow text-center">
+                            <p className="text-gray-500 text-sm">Pending</p>
+                            <p className="text-xl font-bold">{summary?.numPendingTestSuites ?? 0}</p>
+                        </div>
+                        <div className="bg-blue-100 p-4 rounded shadow text-center">
+                            <p className="text-gray-500 text-sm">Success Rate</p>
+                            <p className="text-xl font-bold">
+                                {totalTests > 0
+                                    ? `${((summary?.numPassedTestSuites ?? 0) / totalTests * 100).toFixed(1)}%`
+                                    : "N/A"}
+                            </p>
+                        </div>
+                    </div>
+                )}
             </div>
-            <div className="bg-green-100 p-4 rounded shadow text-center">
-                <p className="text-gray-500 text-sm">Successes</p>
-                <p className="text-xl font-bold">{summary?.numPassedTestSuites ?? 0}</p>
-            </div>
-            <div className="bg-red-100 p-4 rounded shadow text-center">
-                <p className="text-gray-500 text-sm">Failures</p>
-                <p className="text-xl font-bold">{summary?.numFailedTestSuites ?? 0}</p>
-            </div>
-            <div className="bg-yellow-100 p-4 rounded shadow text-center">
-                <p className="text-gray-500 text-sm">Pending</p>
-                <p className="text-xl font-bold">{summary?.numPendingTestSuites ?? 0}</p>
-            </div>
-            <div className="bg-blue-100 p-4 rounded shadow text-center">
-                <p className="text-gray-500 text-sm">Success Rate</p>
-                <p className="text-xl font-bold">
-                    {totalTests > 0
-                        ? `${((summary?.numPassedTestSuites ?? 0) / totalTests * 100).toFixed(1)}%`
-                        : "N/A"}
-                </p>
-            </div>
-        </div>
-    </div>
-);
-
+        );
+        
 
     
 }

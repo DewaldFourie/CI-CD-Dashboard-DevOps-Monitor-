@@ -43,8 +43,15 @@ export async function fetchWorkflowRuns(owner: string, repo: string): Promise<Wo
         const res = await fetch(`${BASE_URL}/repos/${owner}/${repo}/actions/runs?per_page=100&page=${page}`, { headers });
 
         if (!res.ok) {
-            throw new Error(`Github API error: ${res.status}`);
+            if (res.status === 404) {
+                throw new Error("Repository not found.\nPlease check the owner and repo names.");
+            } else if (res.status === 403) {
+                throw new Error("Access denied or rate limit exceeded. Check token or permissions.");
+            } else {
+                throw new Error(`GitHub API error: ${res.statusText || res.status}`);
+            }
         }
+        
 
         const data: WorkflowRunsResponse = await res.json();
         console.log(`GitHub workflow data (page ${page}):`, data);
@@ -80,8 +87,15 @@ export async function fetchArtifacts(owner: string, repo: string, runId: number)
     const res = await fetch(`${BASE_URL}/repos/${owner}/${repo}/actions/runs/${runId}/artifacts`, { headers })
 
     if (!res.ok) {
-        throw new Error(`Github artifact fetch error: ${res.status}`);
+        if (res.status === 404) {
+            throw new Error("No artifacts found for this run.");
+        } else if (res.status === 403) {
+            throw new Error("Access denied when fetching artifacts.");
+        } else {
+            throw new Error(`GitHub artifact fetch error: ${res.statusText || res.status}`);
+        }
     }
+    
 
     const data = await res.json();
     console.log("GitHub artifact data:", data);

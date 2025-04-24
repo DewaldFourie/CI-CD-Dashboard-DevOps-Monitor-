@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import Sidebar from './Sidebar';
 import Header from './Header';
 import { fetchWorkflowRuns } from "../services/GitHubService";
-import TestSummaryWidget  from "../components/TestSummaryWidget";
+import TestSummaryWidget from "../components/TestSummaryWidget";
 
 interface Workflowrun {
     id: number;
@@ -89,36 +89,35 @@ export default function Dashboard() {
             <div className="flex-1 flex flex-col">
                 <Header />
                 <main className="p-6 bg-gray-100 flex-1 overflow-y-auto">
-                <div className="mb-6 flex items-center justify-center gap-2">
-                    <input
-                        type="text"
-                        placeholder="Owner"
-                        value={ownerInput}
-                        onChange={(e) => setOwnerInput(e.target.value)}
-                        className="px-3 py-1 border rounded w-[160px]"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Repository"
-                        value={repoInput}
-                        onChange={(e) => setRepoInput(e.target.value)}
-                        className="px-3 py-1 border rounded w-[240px]"
-                    />
-                    <button
-                        onClick={() => {
-                            if (!ownerInput || !repoInput) return alert("Both fields are required.");
-                            setWorkflowRuns([]);
-                            setError(null);
-                            setOwner(ownerInput.trim());
-                            setRepo(repoInput.trim());
-                        }}
-                        className="px-4 py-1 bg-gray-900 text-white rounded hover:text-emerald-400 transition"
-                    >
-                        Track
-                    </button>
-                </div>
-                <div className="flex justify-between items-center mb-4">
-                    
+                    <div className="mb-6 flex items-center justify-center gap-2">
+                        <input
+                            type="text"
+                            placeholder="Owner"
+                            value={ownerInput}
+                            onChange={(e) => setOwnerInput(e.target.value)}
+                            className="px-3 py-1 border rounded w-[160px]"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Repository"
+                            value={repoInput}
+                            onChange={(e) => setRepoInput(e.target.value)}
+                            className="px-3 py-1 border rounded w-[240px]"
+                        />
+                        <button
+                            onClick={() => {
+                                if (!ownerInput || !repoInput) return alert("Both fields are required.");
+                                setWorkflowRuns([]);
+                                setError(null);
+                                setOwner(ownerInput.trim());
+                                setRepo(repoInput.trim());
+                            }}
+                            className="px-4 py-1 bg-gray-900 text-white rounded hover:text-emerald-400 transition"
+                        >
+                            Track
+                        </button>
+                    </div>
+                    <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold text-gray-700">Latest Workflow Runs</h2>
                         <button
                             onClick={() => {
@@ -167,6 +166,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div className="min-h-[125px] mb-6">
+                        <h2 className="text-xl font-semibold text-gray-700 mb-4">Test Summary</h2>
                         {workflowRuns.length > 0 ? (
                             <TestSummaryWidget
                                 owner={owner}
@@ -174,11 +174,12 @@ export default function Dashboard() {
                                 runId={workflowRuns[0].id}
                             />
                         ) : (
-                            <div className="h-full flex items-center justify-center text-sm text-gray-400">
+                            <div className="h-full flex items-center justify-center min-h-[50px] text-sm text-gray-400">
                                 No data to display.
                             </div>
                         )}
                     </div>
+                    <hr className="border-t border-gray-300 my-4" />
                     <div className="mb-4">
                         <label htmlFor="status-filter" className="text-sm font-medium text-gray-700 mr-2">Filter by status:</label>
                         <select
@@ -193,67 +194,89 @@ export default function Dashboard() {
                             <option value="in_progress">In Progress</option>
                         </select>
                     </div>
-
-                    {loading && <p>Loading...</p>}
-                    {error && <p className="text-red-500">{error}</p>}
-
-                    <div className="overflow-y-auto max-h-[775px]">
-                        <ul className="space-y-4">
-                            {filteredRuns.map(run => (
-                                <li key={run.id} className="p-4 bg-white rounded shadow space-y-1">
-                                    <a
-                                        href={run.html_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-600 font-semibold hover:underline"
+                    {(loading || error) && (
+                        <div className="my-4 flex items-center justify-center min-h-[250px]">
+                            {loading && (
+                                <p className="animate-pulse text-gray-500">Loading...</p>
+                            )}
+                            {error && (
+                                <p className="text-red-600 font-medium whitespace-pre-line text-center">{error}</p>
+                            )}
+                        </div>
+                    )}
+                    {!loading && !error && (
+                        <div className="overflow-y-auto max-h-[775px]">
+                            {filteredRuns.length > 0 ? (
+                                <ul className="space-y-4">
+                                    {filteredRuns.map(run => (
+                                        <li key={run.id} className="p-4 bg-white rounded shadow space-y-1">
+                                            <a
+                                                href={run.html_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-black font-semibold hover:underline"
+                                            >
+                                                {run.name}
+                                            </a>
+                                            <p className="text-sm text-gray-500">
+                                                Status: {run.status} | Result:{" "}
+                                                <span
+                                                    className={
+                                                        run.conclusion === "success"
+                                                            ? "text-green-600 font-medium"
+                                                            : run.conclusion === "failure"
+                                                                ? "text-red-600 font-medium"
+                                                                : run.status === "in_progress"
+                                                                    ? "text-orange-500 font-medium"
+                                                                    : "text-gray-600"
+                                                    }
+                                                >
+                                                    {run.conclusion ?? run.status}
+                                                </span>
+                                            </p>
+                                            <p className="text-sm text-gray-500">
+                                                Triggered by:{" "}
+                                                <a
+                                                    href={run.actor.html_url}
+                                                    className="text-blue-500 hover:underline"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    {run.actor.login}
+                                                </a>
+                                            </p>
+                                            <p className="text-sm text-gray-500">
+                                                Branch: <span className="font-medium text-gray-700">{run.head_branch}</span>
+                                            </p>
+                                            <p className="text-sm text-gray-500">
+                                                Duration:{" "}
+                                                {Math.floor(
+                                                    (new Date(run.updated_at).getTime() - new Date(run.run_started_at).getTime()) / 1000
+                                                )}{" "}
+                                                seconds
+                                            </p>
+                                            <p className="text-xs text-gray-400">
+                                                Created: {new Date(run.created_at).toLocaleString()}
+                                            </p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <div className="h-full flex flex-col min-h-[250px] items-center justify-center text-sm text-gray-400">
+                                    <p>No runs to Display</p>
+                                    <button
+                                        onClick={() => {
+                                            setLoading(true);
+                                            loadRuns();
+                                        }}
+                                        className="px-3 py-1 my-4 bg-gray-900 text-white text-sm rounded hover:text-emerald-400 transition"
                                     >
-                                        {run.name}
-                                    </a>
-                                    <p className="text-sm text-gray-500">
-                                        Status: {run.status} | Result:{" "}
-                                        <span
-                                            className={
-                                                run.conclusion === "success"
-                                                    ? "text-green-600 font-medium"
-                                                    : run.conclusion === "failure"
-                                                    ? "text-red-600 font-medium"
-                                                    : run.status === "in_progress"
-                                                    ? "text-orange-500 font-medium"
-                                                    : "text-gray-600"
-                                            }
-                                        >
-                                            {run.conclusion ?? run.status}
-                                        </span>
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        Triggered by:{" "}
-                                        <a
-                                            href={run.actor.html_url}
-                                            className="text-blue-500 hover:underline"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            {run.actor.login}
-                                        </a>
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        Branch: <span className="font-medium text-gray-700">{run.head_branch}</span>
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        Duration:{" "}
-                                        {Math.floor(
-                                            (new Date(run.updated_at).getTime() - new Date(run.run_started_at).getTime()) / 1000
-                                        )}{" "}
-                                        seconds
-                                    </p>
-                                    <p className="text-xs text-gray-400">
-                                        Created: {new Date(run.created_at).toLocaleString()}
-                                    </p>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
+                                        ↻ Refresh
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </main>
             </div>
         </div>
