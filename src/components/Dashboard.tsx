@@ -28,10 +28,18 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [filter, setFilter] = useState("all");
-    const [ownerInput, setOwnerInput] = useState("DewaldFourie");
-    const [repoInput, setRepoInput] = useState("CI-CD-Dashboard-DevOps-Monitor-");
-    const [owner, setOwner] = useState("DewaldFourie");
-    const [repo, setRepo] = useState("CI-CD-Dashboard-DevOps-Monitor-");
+    const [ownerInput, setOwnerInput] = useState<string>(() =>
+        localStorage.getItem("ciDashboardOwner") ?? "DewaldFourie"
+    );
+    const [repoInput, setRepoInput] = useState<string>(() =>
+        localStorage.getItem("ciDashboardRepo") ?? "CI-CD-Dashboard-DevOps-Monitor-"
+    );
+    const [owner, setOwner] = useState<string>(() =>
+        localStorage.getItem("ciDashboardOwner") ?? "DewaldFourie"
+    );
+    const [repo, setRepo] = useState<string>(() =>
+        localStorage.getItem("ciDashboardRepo") ?? "CI-CD-Dashboard-DevOps-Monitor-"
+    );
 
 
     const loadRuns = useCallback(async () => {
@@ -63,6 +71,12 @@ export default function Dashboard() {
 
         return () => clearInterval(interval); // cleanup
     }, [loadRuns]);
+
+    // add localStorage for current owner and repo
+    useEffect(() => {
+        localStorage.setItem("ciDashboardOwner", owner);
+        localStorage.setItem("ciDashboardRepo", repo);
+    }, [owner, repo]);
 
 
     const filteredRuns = workflowRuns.filter(run =>
