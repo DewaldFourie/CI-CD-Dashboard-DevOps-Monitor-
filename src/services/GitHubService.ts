@@ -6,10 +6,10 @@ interface WorkflowRun {
     name: string;
     status: string;
     conclusion: string | null;
-    head_branch: string; // Add this property
-    html_url: string; // Add this property
-    created_at: string; // Add this property
-    path: string; // Add this property
+    head_branch: string; 
+    html_url: string; 
+    created_at: string; 
+    path: string; 
     actor: {
         login: string;
         avatar_url: string;
@@ -22,7 +22,6 @@ interface WorkflowRun {
 
 interface WorkflowRunsResponse {
     workflow_runs: WorkflowRun[];
-    // Add pagination info if necessary
 }
 
 
