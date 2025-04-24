@@ -29,6 +29,8 @@ export default function TestSummaryWidget({ owner, repo, runId }: Props) {
         async function loadSummary() {
             try {
                 setLoading(true);
+                setError(null);
+                setSummary(null);
                 const artifacts = await fetchArtifacts(owner, repo, runId);
                 console.log("Artifacts available:", artifacts.map((a: Artifact) => a.name));
                 const testArtifact = artifacts.find((a: Artifact) =>

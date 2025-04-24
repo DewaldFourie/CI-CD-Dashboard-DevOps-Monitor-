@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Sidebar from './Sidebar';
 import Header from './Header';
 import { fetchWorkflowRuns } from "../services/GitHubService";
@@ -28,27 +28,31 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [filter, setFilter] = useState("all");
+    const [ownerInput, setOwnerInput] = useState("DewaldFourie");
+    const [repoInput, setRepoInput] = useState("CI-CD-Dashboard-DevOps-Monitor-");
+    const [owner, setOwner] = useState("DewaldFourie");
+    const [repo, setRepo] = useState("CI-CD-Dashboard-DevOps-Monitor-");
 
-    const loadRuns = async () => {
+
+    const loadRuns = useCallback(async () => {
+        setLoading(true);
+        setError(null);
         try {
-            const data = await fetchWorkflowRuns("DewaldFourie", "CI-CD-Dashboard-DevOps-Monitor-");
+            const data = await fetchWorkflowRuns(owner, repo);
             console.log("WorkflowRuns fetched:", data);
             setWorkflowRuns(data);
         } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unknown error occurred.");
-            }
+            if (err instanceof Error) setError(err.message);
+            else setError("An unknown error occurred.");
         } finally {
             setLoading(false);
         }
-    };
+    }, [owner, repo]);
 
     // Initial fetch
     useEffect(() => {
         loadRuns();
-    }, []);
+    }, [loadRuns]);
 
     // Poll every 180s
     useEffect(() => {
@@ -58,7 +62,7 @@ export default function Dashboard() {
         }, 180000);
 
         return () => clearInterval(interval); // cleanup
-    }, []);
+    }, [loadRuns]);
 
 
     const filteredRuns = workflowRuns.filter(run =>
@@ -71,14 +75,43 @@ export default function Dashboard() {
             <div className="flex-1 flex flex-col">
                 <Header />
                 <main className="p-6 bg-gray-100 flex-1 overflow-y-auto">
+                <div className="mb-6 flex items-center justify-center gap-2">
+                    <input
+                        type="text"
+                        placeholder="Owner"
+                        value={ownerInput}
+                        onChange={(e) => setOwnerInput(e.target.value)}
+                        className="px-3 py-1 border rounded w-[160px]"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Repository"
+                        value={repoInput}
+                        onChange={(e) => setRepoInput(e.target.value)}
+                        className="px-3 py-1 border rounded w-[240px]"
+                    />
+                    <button
+                        onClick={() => {
+                            if (!ownerInput || !repoInput) return alert("Both fields are required.");
+                            setWorkflowRuns([]);
+                            setError(null);
+                            setOwner(ownerInput.trim());
+                            setRepo(repoInput.trim());
+                        }}
+                        className="px-4 py-1 bg-gray-900 text-white rounded hover:text-emerald-400 transition"
+                    >
+                        Track
+                    </button>
+                </div>
                 <div className="flex justify-between items-center mb-4">
+                    
                         <h2 className="text-xl font-semibold text-gray-700">Latest Workflow Runs</h2>
                         <button
                             onClick={() => {
                                 setLoading(true);
                                 loadRuns();
                             }}
-                            className="px-3 py-1 bg-white text-blue-600 text-sm rounded hover:bg-blue-600 hover:text-white transition"
+                            className="px-3 py-1 bg-gray-900 text-white text-sm rounded hover:text-emerald-400 transition"
                         >
                             ↻ Refresh
                         </button>
@@ -122,8 +155,8 @@ export default function Dashboard() {
                     <div className="min-h-[125px] mb-6">
                         {workflowRuns.length > 0 ? (
                             <TestSummaryWidget
-                                owner="DewaldFourie"
-                                repo="CI-CD-Dashboard-DevOps-Monitor-"
+                                owner={owner}
+                                repo={repo}
                                 runId={workflowRuns[0].id}
                             />
                         ) : (
@@ -150,7 +183,7 @@ export default function Dashboard() {
                     {loading && <p>Loading...</p>}
                     {error && <p className="text-red-500">{error}</p>}
 
-                    <div className="overflow-y-auto max-h-[500px]">
+                    <div className="overflow-y-auto max-h-[775px]">
                         <ul className="space-y-4">
                             {filteredRuns.map(run => (
                                 <li key={run.id} className="p-4 bg-white rounded shadow space-y-1">
