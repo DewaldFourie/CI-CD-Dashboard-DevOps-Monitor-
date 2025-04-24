@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Sidebar from './Sidebar';
 import Header from './Header';
 import { fetchWorkflowRuns } from "../services/GitHubService";
@@ -34,26 +34,25 @@ export default function Dashboard() {
     const [repo, setRepo] = useState("CI-CD-Dashboard-DevOps-Monitor-");
 
 
-    const loadRuns = async () => {
+    const loadRuns = useCallback(async () => {
+        setLoading(true);
+        setError(null);
         try {
             const data = await fetchWorkflowRuns(owner, repo);
             console.log("WorkflowRuns fetched:", data);
             setWorkflowRuns(data);
         } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unknown error occurred.");
-            }
+            if (err instanceof Error) setError(err.message);
+            else setError("An unknown error occurred.");
         } finally {
             setLoading(false);
         }
-    };
+    }, [owner, repo]);
 
     // Initial fetch
     useEffect(() => {
         loadRuns();
-    }, []);
+    }, [loadRuns]);
 
     // Poll every 180s
     useEffect(() => {
@@ -63,7 +62,7 @@ export default function Dashboard() {
         }, 180000);
 
         return () => clearInterval(interval); // cleanup
-    }, []);
+    }, [loadRuns]);
 
 
     const filteredRuns = workflowRuns.filter(run =>
@@ -98,8 +97,6 @@ export default function Dashboard() {
                             setError(null);
                             setOwner(ownerInput.trim());
                             setRepo(repoInput.trim());
-                            setLoading(true);
-                            loadRuns();
                         }}
                         className="px-4 py-1 bg-gray-900 text-white rounded hover:text-emerald-400 transition"
                     >
