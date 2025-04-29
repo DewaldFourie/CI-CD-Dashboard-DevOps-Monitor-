@@ -1,6 +1,4 @@
 import { useEffect, useState, useCallback } from "react";
-import Sidebar from './Sidebar';
-import Header from './Header';
 import { fetchWorkflowRuns } from "../services/GitHubService";
 import TestSummaryWidget from "../components/TestSummaryWidget";
 
@@ -85,9 +83,7 @@ export default function Dashboard() {
 
     return (
         <div className="flex h-screen">
-            <Sidebar />
             <div className="flex-1 flex flex-col">
-                <Header />
                 <main className="p-6 bg-gray-100 flex-1 overflow-y-auto">
                     <div className="mb-6 flex items-center justify-center gap-2">
                         <input
@@ -207,7 +203,7 @@ export default function Dashboard() {
                     {!loading && !error && (
                         <div className="overflow-y-auto max-h-[775px]">
                             {filteredRuns.length > 0 ? (
-                                <ul className="space-y-4">
+                                <ul className="space-y-4 pb-14">
                                     {filteredRuns.map(run => (
                                         <li key={run.id} className="p-4 bg-white rounded shadow space-y-1">
                                             <a
