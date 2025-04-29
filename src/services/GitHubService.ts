@@ -101,3 +101,4 @@ export async function fetchArtifacts(owner: string, repo: string, runId: number)
     console.log("GitHub artifact data:", data);
     return data.artifacts;
 }
+
