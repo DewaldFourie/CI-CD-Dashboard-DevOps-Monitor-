@@ -1,6 +1,4 @@
 import { useEffect, useState, useCallback } from "react";
-import Sidebar from './Sidebar';
-import Header from './Header';
 import { fetchWorkflowRuns } from "../services/GitHubService";
 import TestSummaryWidget from "../components/TestSummaryWidget";
 
@@ -57,6 +55,15 @@ export default function Dashboard() {
         }
     }, [owner, repo]);
 
+    const handleTrack = () => {
+        if (!ownerInput || !repoInput) return alert("Both fields are required.");
+        setWorkflowRuns([]);
+        setError(null);
+        setOwner(ownerInput.trim());
+        setRepo(repoInput.trim());
+    };
+    
+
     // Initial fetch
     useEffect(() => {
         loadRuns();
@@ -85,9 +92,7 @@ export default function Dashboard() {
 
     return (
         <div className="flex h-screen">
-            <Sidebar />
             <div className="flex-1 flex flex-col">
-                <Header />
                 <main className="p-6 bg-gray-100 flex-1 overflow-y-auto">
                     <div className="mb-6 flex items-center justify-center gap-2">
                         <input
@@ -105,13 +110,8 @@ export default function Dashboard() {
                             className="px-3 py-1 border rounded w-[240px]"
                         />
                         <button
-                            onClick={() => {
-                                if (!ownerInput || !repoInput) return alert("Both fields are required.");
-                                setWorkflowRuns([]);
-                                setError(null);
-                                setOwner(ownerInput.trim());
-                                setRepo(repoInput.trim());
-                            }}
+                            onKeyDown={(e) => { if (e.key === "Enter") handleTrack(); }}
+                            onClick={handleTrack}
                             className="px-4 py-1 bg-gray-900 text-white rounded hover:text-emerald-400 transition"
                         >
                             Track
@@ -129,6 +129,7 @@ export default function Dashboard() {
                             ↻ Refresh
                         </button>
                     </div>
+                    
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                         <div className="bg-white p-4 rounded shadow text-center">
                             <p className="text-gray-500 text-sm">Total Runs</p>
@@ -205,9 +206,9 @@ export default function Dashboard() {
                         </div>
                     )}
                     {!loading && !error && (
-                        <div className="overflow-y-auto max-h-[775px]">
+                        <div className="overflow-y-auto max-h-[820px]">
                             {filteredRuns.length > 0 ? (
-                                <ul className="space-y-4">
+                                <ul className="space-y-4 pb-14">
                                     {filteredRuns.map(run => (
                                         <li key={run.id} className="p-4 bg-white rounded shadow space-y-1">
                                             <a
@@ -235,15 +236,22 @@ export default function Dashboard() {
                                                 </span>
                                             </p>
                                             <p className="text-sm text-gray-500">
-                                                Triggered by:{" "}
-                                                <a
-                                                    href={run.actor.html_url}
-                                                    className="text-blue-500 hover:underline"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    {run.actor.login}
-                                                </a>
+                                                    Triggered by:{" "}
+                                                <div className="flex items-center gap-2">
+                                                    <a
+                                                        href={run.actor.html_url}
+                                                        className="text-blue-500 hover:underline"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        {run.actor.login}
+                                                    </a>
+                                                    <img
+                                                        src={run.actor.avatar_url}
+                                                        alt={run.actor.login}
+                                                        className="w-6 h-6 rounded-full"
+                                                    />
+                                                </div>
                                             </p>
                                             <p className="text-sm text-gray-500">
                                                 Branch: <span className="font-medium text-gray-700">{run.head_branch}</span>
@@ -264,6 +272,7 @@ export default function Dashboard() {
                             ) : (
                                 <div className="h-full flex flex-col min-h-[250px] items-center justify-center text-sm text-gray-400">
                                     <p>No runs to Display</p>
+                                    {workflowRuns.length === 0 && <p>Make sure the Repository has at least one GitHub Actions workflow</p>}
                                     <button
                                         onClick={() => {
                                             setLoading(true);

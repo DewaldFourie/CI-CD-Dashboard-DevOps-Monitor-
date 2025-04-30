@@ -72,8 +72,6 @@ export async function fetchWorkflowRuns(owner: string, repo: string): Promise<Wo
 }
 
 
-
-
 export async function fetchArtifacts(owner: string, repo: string, runId: number) {
     const headers: Record<string, string> = {
         Accept: 'application/vnd.github+json',
@@ -101,3 +99,4 @@ export async function fetchArtifacts(owner: string, repo: string, runId: number)
     console.log("GitHub artifact data:", data);
     return data.artifacts;
 }
+
