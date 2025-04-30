@@ -13,7 +13,6 @@ export default function Settings() {
         localStorage.setItem('ciDashboardOwner', owner);
         localStorage.setItem('ciDashboardRepo', repo);
         localStorage.setItem('ciDashboardPoll', pollInterval.toString());
-        // no need to persist token in localStorage if using .env
     }, [owner, repo, pollInterval]);
 
     return (

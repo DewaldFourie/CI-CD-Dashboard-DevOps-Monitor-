@@ -45,7 +45,6 @@ export default function Dashboard() {
         setError(null);
         try {
             const data = await fetchWorkflowRuns(owner, repo);
-            console.log("WorkflowRuns fetched:", data);
             setWorkflowRuns(data);
         } catch (err) {
             if (err instanceof Error) setError(err.message);
@@ -62,14 +61,14 @@ export default function Dashboard() {
         setOwner(ownerInput.trim());
         setRepo(repoInput.trim());
     };
-    
+
 
     // Initial fetch
     useEffect(() => {
         loadRuns();
     }, [loadRuns]);
 
-    // Poll every 180s
+    // Poll every interval seconds
     useEffect(() => {
         const interval = setInterval(() => {
             console.log("🔄 Polling GitHub for new workflow runs...");
@@ -129,7 +128,7 @@ export default function Dashboard() {
                             ↻ Refresh
                         </button>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                         <div className="bg-white p-4 rounded shadow text-center">
                             <p className="text-gray-500 text-sm">Total Runs</p>
@@ -235,12 +234,12 @@ export default function Dashboard() {
                                                     {run.conclusion ?? run.status}
                                                 </span>
                                             </p>
-                                            <p className="text-sm text-gray-500">
-                                                    Triggered by:{" "}
+                                            <div className="text-sm text-gray-500">
+                                                <span>Triggered by: </span>
                                                 <div className="flex items-center gap-2">
                                                     <a
                                                         href={run.actor.html_url}
-                                                        className="text-blue-500 hover:underline"
+                                                        className="text-blue-500 hover:underline mt-1"
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                     >
@@ -252,7 +251,7 @@ export default function Dashboard() {
                                                         className="w-6 h-6 rounded-full"
                                                     />
                                                 </div>
-                                            </p>
+                                            </div>
                                             <p className="text-sm text-gray-500">
                                                 Branch: <span className="font-medium text-gray-700">{run.head_branch}</span>
                                             </p>

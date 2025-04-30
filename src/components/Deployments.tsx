@@ -32,8 +32,7 @@ export default function DeploymentsPage() {
         setLoading(true);
         setError(null);
         try {
-            const all = await fetchWorkflowRuns(owner, repo);
-            console.log('feteched runs:', all);      
+            const all = await fetchWorkflowRuns(owner, repo);   
             const deployRuns = all.filter(run =>
                 /(deploy|production|prod|release)/i.test(run.name)
             );            
