@@ -1,54 +1,135 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# DevOps Monitor: A GitHub Actions CI/CD Dashboard
 
-Currently, two official plugins are available:
+DevOps Monitor is a web-based dashboard that tracks and visualizes GitHub Actions workflow runs for any repository.
+It provides real-time monitoring of build statuses, success rates, and workflow activity, helping development teams quickly identify failures, assess deployment health, and maintain continuous integration standards.
+Built with React, TypeScript, and TailwindCSS, DevOps Monitor integrates directly with the GitHub API and refreshes automatically to ensure up-to-date visibility into CI/CD pipelines.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Real-time GitHub Actions workflow monitoring
+- Build success/failure tracking
+- Success rate calculation
+- Auto-refreshing every 3 minutes
+- Artifact fetching for workflow runs
+- Custom repository selection
+- Lightweight, responsive UI (React + TailwindCSS)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+
+## Optimized github/workflows/main.yml Template
+
+For best results, we recommend structuring your '.yml' file like this:
+
+```bash
+name: 'Name' (any name you prefer)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: 🔄 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🛠️ Build project
+        run: npm run build
+
+      - name: 🗂️ Create reports directory
+        run: mkdir -p reports
+
+      - name: ✅ Run tests
+        run: npm test
+        continue-on-error: true
+
+      - name: 📄 Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: reports/test-summary.json
+
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Documentation
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+When you enter a GitHub username and repo name and hit "Track", it:
+
+    1. Fetches Recent Workflow Runs
+Grabs recent GitHub Actions runs — especially ones related to deployments (can be modified as needed).
+
+    2. Displays Deployment History
+Shows a feed of the last deployment runs, including:
+
+• Commit message
+
+• Branch name
+
+• Trigger type (manual, push, etc.)
+
+• Status (success/failure)
+
+• Time of execution
+
+    3. Fetches and Analyzes Build Artifacts
+If a workflow run includes a test summary artifact (e.g., a .json file zipped up and uploaded), it:
+
+• Downloads the ZIP artifact
+
+• Extracts it in-memory in the browser
+
+• Parses the JSON
+
+• Calculates stats: total tests, passed, failed, skipped
+
+• Computes and displays a Success Rate
+
+    4. Live Polling
+The dashboard auto-refreshes workflow runs every 3 minutes (can be adjusted as needed), so you can keep it open like a live CI monitor.
+
+    5. Basic Filtering
+Only shows deploy-related runs (ignores lint, test-only, or unrelated builds).
+
+
+
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`VITE_GITHUB_TOKEN`
+
+
+
+
+## Authors
+
+- [@dewaldfourie](https://github.com/DewaldFourie)
+
+
+## Tech Stack
+
+**Client:** TypeScript, React, Redux, TailwindCSS
+
+**Server:** Node, GithubAPI
+
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
