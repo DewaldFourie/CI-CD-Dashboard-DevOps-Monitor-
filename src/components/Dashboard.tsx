@@ -93,29 +93,53 @@ export default function Dashboard() {
         <div className="flex h-screen">
             <div className="flex-1 flex flex-col">
                 <main className="p-6 bg-gray-100 flex-1 overflow-y-auto">
-                    <div className="mb-6 flex items-center justify-center gap-2">
-                        <input
-                            type="text"
-                            placeholder="Owner"
-                            value={ownerInput}
-                            onChange={(e) => setOwnerInput(e.target.value)}
-                            className="px-3 py-1 border rounded w-[160px]"
-                        />
-                        <input
-                            type="text"
-                            placeholder="Repository"
-                            value={repoInput}
-                            onChange={(e) => setRepoInput(e.target.value)}
-                            className="px-3 py-1 border rounded w-[240px]"
-                        />
+                    <div className="mb-2 flex items-center justify-center gap-4">
+                        {/* Owner Input */}
+                        <div className="relative w-[160px]">
+                            <input
+                                type="text"
+                                id="owner_input"
+                                value={ownerInput}
+                                onChange={(e) => setOwnerInput(e.target.value)}
+                                placeholder=" "
+                                className="peer block w-full appearance-none border border-gray-300 bg-white px-2.5 pb-2.5 pt-4 text-md text-black rounded-lg focus:border-emerald-400 focus:outline-none focus:ring-0"
+                            />
+                            <label
+                                htmlFor="owner_input"
+                                className="absolute left-2.5 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-white rounded-lg px-1 text-sm text-black transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75"
+                            >
+                                Owner
+                            </label>
+                        </div>
+
+                        {/* Repo Input */}
+                        <div className="relative w-[240px]">
+                            <input
+                                type="text"
+                                id="repo_input"
+                                value={repoInput}
+                                onChange={(e) => setRepoInput(e.target.value)}
+                                placeholder=" "
+                                className="peer block w-full appearance-none border border-gray-300 bg-white px-2.5 pb-2.5 pt-4 text-md text-gray-900 rounded-lg focus:border-emerald-400  focus:outline-none focus:ring-0"
+                            />
+                            <label
+                                htmlFor="repo_input"
+                                className="absolute left-2.5 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-white rounded-lg px-1 text-sm text-black transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75"
+                            >
+                                Repository
+                            </label>
+                        </div>
+
+                        {/* Track Button */}
                         <button
                             onKeyDown={(e) => { if (e.key === "Enter") handleTrack(); }}
                             onClick={handleTrack}
-                            className="px-4 py-1 bg-gray-900 text-white rounded hover:text-emerald-400 transition"
+                            className="px-5 py-2 bg-gray-900 text-white rounded hover:text-emerald-400 transition"
                         >
                             Track
                         </button>
                     </div>
+                    <p id="floating_helper_text" className="mb-4 text-xs flex justify-center text-gray-500">Ensure you're using valid and publicly available{' '}<a href="#" className="text-blue-600 hover:underline">GitHub</a>{' '}owner and repo names.</p>
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold text-gray-700">Latest Workflow Runs</h2>
                         <button
@@ -128,7 +152,6 @@ export default function Dashboard() {
                             ↻ Refresh
                         </button>
                     </div>
-
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                         <div className="bg-white p-4 rounded shadow text-center">
                             <p className="text-gray-500 text-sm">Total Runs</p>
