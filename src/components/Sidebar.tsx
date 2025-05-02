@@ -12,7 +12,10 @@ export default function Sidebar() {
     return (
         <aside className="w-64 h-full bg-gray-900 text-white p-4 flex flex-col justify-between">
             <div>
-                <h2 className="text-xl font-bold mb-6">CI/CD DevOps</h2>
+                <div className='flex justify-between'>
+                    <h2 className="text-xl font-bold mb-6">CI/CD DevOps</h2>
+                    <img className='w-8 h-8' src="../public/ci-cd.svg" alt="" />
+                </div>
                 <nav className="space-y-2">
                     <NavLink to="/dashboard" className={linkClass}>
                         <Home size={16} /> Dashboard
