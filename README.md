@@ -8,7 +8,7 @@ Built with React, TypeScript, and TailwindCSS, DevOps Monitor integrates directl
 ## Preview
 <img width="1440" alt="Image Tagging APP" src="https://github.com/user-attachments/assets/d0f246ea-692d-4029-864b-6e4696e4c8c3" />
 
-## [DEMO- (click here to run the demo)](https://ci-cd-dashboard-dev-ops-monitor.vercel.app/dashboard)
+## [DEMO- (click here to run the demo)](https://ci-cd-dashboard-dev-ops-monitor.vercel.app/)
 
 ## Features
 
