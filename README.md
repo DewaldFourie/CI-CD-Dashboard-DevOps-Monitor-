@@ -6,8 +6,9 @@ It provides real-time monitoring of build statuses, success rates, and workflow 
 Built with React, TypeScript, and TailwindCSS, DevOps Monitor integrates directly with the GitHub API and refreshes automatically to ensure up-to-date visibility into CI/CD pipelines.
 
 ## Preview
-<img width="1440" alt="Image Tagging APP" src="https://github.com/user-attachments/assets/6fb88119-5021-45bb-b344-3e2562031588" />
+<img width="1440" alt="Image Tagging APP" src="https://github.com/user-attachments/assets/d0f246ea-692d-4029-864b-6e4696e4c8c3" />
 
+## [DEMO- (click here to run the demo)](https://ci-cd-dashboard-dev-ops-monitor.vercel.app/dashboard)
 
 ## Features
 
