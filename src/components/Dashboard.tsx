@@ -30,13 +30,13 @@ export default function Dashboard() {
         localStorage.getItem("ciDashboardOwner") ?? "DewaldFourie"
     );
     const [repoInput, setRepoInput] = useState<string>(() =>
-        localStorage.getItem("ciDashboardRepo") ?? "CI-CD-Dashboard-DevOps-Monitor-"
+        localStorage.getItem("ciDashboardRepo") ?? "StickerSmash"
     );
     const [owner, setOwner] = useState<string>(() =>
         localStorage.getItem("ciDashboardOwner") ?? "DewaldFourie"
     );
     const [repo, setRepo] = useState<string>(() =>
-        localStorage.getItem("ciDashboardRepo") ?? "CI-CD-Dashboard-DevOps-Monitor-"
+        localStorage.getItem("ciDashboardRepo") ?? "StickerSmash"
     );
 
 

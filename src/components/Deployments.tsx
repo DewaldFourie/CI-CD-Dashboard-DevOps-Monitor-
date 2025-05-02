@@ -24,9 +24,9 @@ export default function DeploymentsPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [ownerInput, setOwnerInput] = useState<string>(localStorage.getItem("ciDashboardOwner") ?? "DewaldFourie");
-    const [repoInput, setRepoInput] = useState<string>(localStorage.getItem("ciDashboardRepo") ?? "CI-CD-Dashboard-DevOps-Monitor-");
+    const [repoInput, setRepoInput] = useState<string>(localStorage.getItem("ciDashboardRepo") ?? "StickerSmash");
     const [owner, setOwner] = useState<string>(localStorage.getItem("ciDashboardOwner") ?? "DewaldFourie");
-    const [repo, setRepo] = useState<string>(localStorage.getItem("ciDashboardRepo") ?? "CI-CD-Dashboard-DevOps-Monitor-");
+    const [repo, setRepo] = useState<string>(localStorage.getItem("ciDashboardRepo") ?? "StickerSmash");
 
     const loadDeployments = useCallback(async () => {
         setLoading(true);
