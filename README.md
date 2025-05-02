@@ -5,6 +5,9 @@ DevOps Monitor is a web-based dashboard that tracks and visualizes GitHub Action
 It provides real-time monitoring of build statuses, success rates, and workflow activity, helping development teams quickly identify failures, assess deployment health, and maintain continuous integration standards.
 Built with React, TypeScript, and TailwindCSS, DevOps Monitor integrates directly with the GitHub API and refreshes automatically to ensure up-to-date visibility into CI/CD pipelines.
 
+## Preview
+<img width="1440" alt="Image Tagging APP" src="https://github.com/user-attachments/assets/6fb88119-5021-45bb-b344-3e2562031588" />
+
 
 ## Features
 
