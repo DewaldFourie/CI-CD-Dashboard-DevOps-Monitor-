@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 export default function Settings() {
     const [owner, setOwner] = useState(localStorage.getItem('ciDashboardOwner') || '');
     const [repo, setRepo] = useState(localStorage.getItem('ciDashboardRepo') || '');
-    const [token, setToken] = useState(import.meta.env.VITE_GITHUB_TOKEN || '');
+    const [token, setToken] = useState('************************************');
     const [pollInterval, setPollInterval] = useState(
         Number(localStorage.getItem('ciDashboardPoll') || '180000')
     );
