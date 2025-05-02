@@ -14,7 +14,7 @@ export default function Sidebar() {
             <div>
                 <div className='flex justify-between'>
                     <h2 className="text-xl font-bold mb-6">CI/CD DevOps</h2>
-                    <img className='w-8 h-8' src="../public/ci-cd.svg" alt="" />
+                    <img className='w-8 h-8' src="../src/assets/ci-cd.svg" alt="" />
                 </div>
                 <nav className="space-y-2">
                     <NavLink to="/dashboard" className={linkClass}>
