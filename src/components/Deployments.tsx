@@ -44,6 +44,14 @@ export default function DeploymentsPage() {
         }
     }, [owner, repo]);
 
+    const handleTrack = () => {
+        if (!ownerInput || !repoInput) return alert("Both fields are required.");
+        setDeployments([]);
+        setError(null);
+        setOwner(ownerInput.trim());
+        setRepo(repoInput.trim());
+    };
+
     useEffect(() => {
         loadDeployments();
     }, [loadDeployments]);
@@ -57,34 +65,51 @@ export default function DeploymentsPage() {
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
             {/* Owner and Repo Input Section */}
-            <div className="mb-6 flex items-center justify-center gap-2">
-                <input
-                    type="text"
-                    placeholder="Owner"
-                    value={ownerInput}
-                    onChange={(e) => setOwnerInput(e.target.value)}
-                    className="px-3 py-1 border rounded w-[160px]"
-                />
-                <input
-                    type="text"
-                    placeholder="Repository"
-                    value={repoInput}
-                    onChange={(e) => setRepoInput(e.target.value)}
-                    className="px-3 py-1 border rounded w-[240px]"
-                />
+            <div className="mb-2 flex items-center justify-center gap-4">
+                {/* Owner Input */}
+                <div className="relative w-[160px]">
+                    <input
+                        type="text"
+                        id="owner_input"
+                        value={ownerInput}
+                        onChange={(e) => setOwnerInput(e.target.value)}
+                        placeholder=" "
+                        className="peer block w-full appearance-none border border-gray-300 bg-white px-2.5 pb-2.5 pt-4 text-md text-black rounded-lg focus:border-emerald-400 focus:outline-none focus:ring-0"
+                    />
+                    <label
+                        htmlFor="owner_input"
+                        className="absolute left-2.5 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-white rounded-lg px-1 text-sm text-black transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75"
+                    >
+                        Owner
+                    </label>
+                </div>
+                {/* Repo Input */}
+                <div className="relative w-[240px]">
+                    <input
+                        type="text"
+                        id="repo_input"
+                        value={repoInput}
+                        onChange={(e) => setRepoInput(e.target.value)}
+                        placeholder=" "
+                        className="peer block w-full appearance-none border border-gray-300 bg-white px-2.5 pb-2.5 pt-4 text-md text-gray-900 rounded-lg focus:border-emerald-400  focus:outline-none focus:ring-0"
+                    />
+                    <label
+                        htmlFor="repo_input"
+                        className="absolute left-2.5 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-white rounded-lg px-1 text-sm text-black transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75"
+                    >
+                        Repository
+                    </label>
+                </div>
+                {/* Track Button */}
                 <button
-                    onClick={() => {
-                        if (!ownerInput || !repoInput) return alert("Both fields are required.");
-                        setDeployments([]); // Clear previous deployments
-                        setError(null);
-                        setOwner(ownerInput.trim());
-                        setRepo(repoInput.trim());
-                    }}
-                    className="px-4 py-1 bg-gray-900 text-white rounded hover:text-emerald-400 transition"
+                    onKeyDown={(e) => { if (e.key === "Enter") handleTrack(); }}
+                    onClick={handleTrack}
+                    className="px-5 py-2 bg-gray-900 text-white rounded hover:text-emerald-400 transition"
                 >
                     Track
                 </button>
             </div>
+            <p id="floating_helper_text" className="mb-4 text-xs flex justify-center text-gray-500">Ensure you're using valid and publicly available Github owner and repository names</p>
             <h2 className="text-xl mb-4 font-semibold text-gray-700">Recent Deployments</h2>
             {/* Conditional Rendering */}
             {(loading || error) ? (

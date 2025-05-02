@@ -62,7 +62,6 @@ export default function Dashboard() {
         setRepo(repoInput.trim());
     };
 
-
     // Initial fetch
     useEffect(() => {
         loadRuns();
@@ -129,7 +128,6 @@ export default function Dashboard() {
                                 Repository
                             </label>
                         </div>
-
                         {/* Track Button */}
                         <button
                             onKeyDown={(e) => { if (e.key === "Enter") handleTrack(); }}
@@ -139,9 +137,9 @@ export default function Dashboard() {
                             Track
                         </button>
                     </div>
-                    <p id="floating_helper_text" className="mb-4 text-xs flex justify-center text-gray-500">Ensure you're using valid and publicly available{' '}<a href="#" className="text-blue-600 hover:underline">GitHub</a>{' '}owner and repo names.</p>
+                    <p id="floating_helper_text" className="mb-4 text-xs flex justify-center text-gray-500">Ensure you're using valid and publicly available Github owner and repository names</p>
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-semibold text-gray-700">Latest Workflow Runs</h2>
+                        <h2 className="text-xl font-semibold text-gray-700 text-center flex items-center justify-center">Latest Workflow Runs</h2>
                         <button
                             onClick={() => {
                                 setLoading(true);
